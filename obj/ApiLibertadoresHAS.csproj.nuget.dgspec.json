@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Work\\Etec\\2026-3AI_ETIM_PAMII\\ApiLibertadoresHAS\\ApiLibertadoresHAS.csproj": {}
+    "D:\\s mt\\API-Libertadores\\ApiLibertadoresHAS.csproj": {}
   },
   "projects": {
-    "D:\\Work\\Etec\\2026-3AI_ETIM_PAMII\\ApiLibertadoresHAS\\ApiLibertadoresHAS.csproj": {
+    "D:\\s mt\\API-Libertadores\\ApiLibertadoresHAS.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Work\\Etec\\2026-3AI_ETIM_PAMII\\ApiLibertadoresHAS\\ApiLibertadoresHAS.csproj",
+        "projectUniqueName": "D:\\s mt\\API-Libertadores\\ApiLibertadoresHAS.csproj",
         "projectName": "ApiLibertadoresHAS",
-        "projectPath": "D:\\Work\\Etec\\2026-3AI_ETIM_PAMII\\ApiLibertadoresHAS\\ApiLibertadoresHAS.csproj",
-        "packagesPath": "C:\\Users\\Luizs\\.nuget\\packages\\",
-        "outputPath": "D:\\Work\\Etec\\2026-3AI_ETIM_PAMII\\ApiLibertadoresHAS\\obj\\",
+        "projectPath": "D:\\s mt\\API-Libertadores\\ApiLibertadoresHAS.csproj",
+        "packagesPath": "D:\\NugetPackages",
+        "outputPath": "D:\\s mt\\API-Libertadores\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Luizs\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\etechas\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -87,7 +87,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.302/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
