@@ -3121,17 +3121,17 @@
     ]
   },
   "packageFolders": {
-    "D:\\NugetPackages": {},
+    "D:\\NUGET_PACKAGES": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\s mt\\API-Libertadores\\ApiLibertadoresHAS.csproj",
+      "projectUniqueName": "D:\\enzoheitor\\O MELHOR TCC DE TODOS 67 AURA\\api\\API_TCC\\ApiLibertadoresHAS.csproj",
       "projectName": "ApiLibertadoresHAS",
-      "projectPath": "D:\\s mt\\API-Libertadores\\ApiLibertadoresHAS.csproj",
-      "packagesPath": "D:\\NugetPackages",
-      "outputPath": "D:\\s mt\\API-Libertadores\\obj\\",
+      "projectPath": "D:\\enzoheitor\\O MELHOR TCC DE TODOS 67 AURA\\api\\API_TCC\\ApiLibertadoresHAS.csproj",
+      "packagesPath": "D:\\NUGET_PACKAGES",
+      "outputPath": "D:\\enzoheitor\\O MELHOR TCC DE TODOS 67 AURA\\api\\API_TCC\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

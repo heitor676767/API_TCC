@@ -7,19 +7,34 @@ namespace ApiLibertadoresHAS.Models
 {
     public class Usuario
     {
-        public int Id { get; set; }
-        public string Cpf { get; set; } = string.Empty;
-        public string Cep { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string senha { get; set; } = string.Empty;
-        public string TipoUsuario { get; set; } = string.Empty;
+        public string Cpf { get; set; }
+
+        public string Nome { get; set; }
+
+        public string Cep { get; set; }
+
+        public string Email { get; set; }
+
+        public string Senha { get; set; }
+
+        public string TipoUsuario { get; set; }
+
         public string? StatusUser { get; set; }
-        public string Telefone { get; set; } = string.Empty;
+
+        public string Telefone { get; set; }
+
         public string Genero { get; set; } = "Nao informado";
+
         public string? Foto { get; set; }
+
         public DateTime UltimoLogin { get; set; } = DateTime.Now;
+
         public DateTime DataCadastro { get; set; } = DateTime.Now;
 
+        // Navegação 1:1 (pode ser null se o usuário for só Dono)
+        public PetwalkerPerfil? PetwalkerPerfil { get; set; }
 
+        // Navegação 1:N (pets que esse usuário é dono)
+        public ICollection<Pet> Pets { get; set; } = new List<Pet>();
     }
 }
