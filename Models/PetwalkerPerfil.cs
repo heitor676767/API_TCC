@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 
 namespace ApiLibertadoresHAS.Models
 {
-    public class PetwalkerPerfil
-    {
         public class PetwalkerPerfil
         {
             public string Cpf { get; set; } // PK e FK -> Usuario.Cpf
@@ -23,5 +21,4 @@ namespace ApiLibertadoresHAS.Models
 
             public ICollection<Passeio> Passeios { get; set; } = new List<Passeio>();
         }
-    }
 }

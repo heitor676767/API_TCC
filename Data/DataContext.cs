@@ -1,5 +1,6 @@
 using ApiLibertadoresHAS.Models;
 using Microsoft.EntityFrameworkCore;
+using ApiLibertadoresHAS.Models.Enums;  
 
 namespace ApiLibertadoresHAS.Data
 {
@@ -164,6 +165,7 @@ namespace ApiLibertadoresHAS.Data
                     .IsRequired();
 
                 entity.Property(e => e.Porte)
+                    .HasConversion<string>()
                     .HasMaxLength(15)
                     .IsRequired();
 
@@ -172,6 +174,7 @@ namespace ApiLibertadoresHAS.Data
                     "Porte IN ('Grande','Medio','Pequeno')"));
 
                 entity.Property(e => e.Sexo)
+                    .HasConversion<string>()
                     .HasMaxLength(10)
                     .IsRequired();
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ApiLibertadoresHAS.Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,11 +22,15 @@ namespace ApiLibertadoresHAS.Models
 
         public int Peso { get; set; }
 
-        public enum Porte { Grande, Medio, Pequeno }
+        public Porte Porte { get; set; }
 
-        public enum Sexo { Macho, Femea }
+        public Sexo Sexo { get; set; }
 
-        public string CpfDono { get; set; } = string.Empty; 
+        public string CpfDono { get; set; } = string.Empty;
+
+        public Usuario Dono { get; set; } = null!;
+        public ICollection<Avaliacao> Avaliacoes { get; set; } = new List<Avaliacao>();
+        public ICollection<Passeio> Passeios { get; set; } = new List<Passeio>();
 
     }
 }
