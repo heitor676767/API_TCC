@@ -1,4 +1,4 @@
-﻿namespace ApiLibertadoresHAS.Models
+﻿namespace ApiTCC.Models
 {
     public class Transacao
     {

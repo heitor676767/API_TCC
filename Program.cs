@@ -1,4 +1,4 @@
-using ApiLibertadoresHAS.Data;
+using ApiTCC.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

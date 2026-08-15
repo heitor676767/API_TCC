@@ -1,6 +1,6 @@
-@ApiLibertadoresHAS_HostAddress = http://localhost:5058
+@ApiTCC_HostAddress = http://localhost:5058
 
-GET {{ApiLibertadoresHAS_HostAddress}}/weatherforecast/
+GET {{ApiTCC_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###

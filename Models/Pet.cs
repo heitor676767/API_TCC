@@ -1,10 +1,10 @@
-﻿using ApiLibertadoresHAS.Models.Enums;
+﻿using ApiTCC.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ApiLibertadoresHAS.Models
+namespace ApiTCC.Models
 {
     public class Pet
     {

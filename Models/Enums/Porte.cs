@@ -1,4 +1,4 @@
-﻿namespace ApiLibertadoresHAS.Models.Enums
+﻿namespace ApiTCC.Models.Enums
 {
     public enum Porte
     {

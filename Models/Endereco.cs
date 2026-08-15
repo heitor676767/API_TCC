@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace ApiLibertadoresHAS.Models
+namespace ApiTCC.Models
 {
     public class Endereco
     {

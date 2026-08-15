@@ -1,8 +1,8 @@
-using ApiLibertadoresHAS.Models;
+using ApiTCC.Models;
 using Microsoft.EntityFrameworkCore;
-using ApiLibertadoresHAS.Models.Enums;  
+using ApiTCC.Models.Enums;  
 
-namespace ApiLibertadoresHAS.Data
+namespace ApiTCC.Data
 {
     public class DataContext : DbContext
     {
