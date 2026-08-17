@@ -57,9 +57,13 @@ namespace ApiTCC.Data
                 entity.HasIndex(e => e.Email)
                     .IsUnique();
 
-                entity.Property(e => e.Senha)
-                    .HasMaxLength(255)
-                    .IsRequired();
+                entity.Property(e => e.PasswordHash)
+                    .IsRequired(false);
+
+
+
+                entity.Property(e => e.PasswordSalt)
+                    .IsRequired(false);
 
                 entity.Property(e => e.TipoUsuario)
                     .HasMaxLength(15)
