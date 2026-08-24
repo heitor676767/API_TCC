@@ -32,6 +32,9 @@ namespace ApiTCC.Models
 
         public DateTime UltimoLogin { get; set; } = DateTime.Now;
 
+        [NotMapped]
+        public string Token { get; set; } = string.Empty;
+
         public DateTime DataCadastro { get; set; } = DateTime.Now;
 
         // Navegação 1:1 (pode ser null se o usuário for só Dono)

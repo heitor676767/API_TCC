@@ -1,4 +1,6 @@
-﻿namespace ApiTCC.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ApiTCC.Models
 {
     public class Transacao
     {
@@ -9,6 +11,8 @@
         public DateOnly DataPgmt { get; set; }
 
         public int IdPasseio { get; set; } // FK
+
+
         public Passeio Passeio { get; set; } // navegação
     }
 }
