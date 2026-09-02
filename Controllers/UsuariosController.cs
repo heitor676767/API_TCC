@@ -18,7 +18,6 @@ namespace ApiTCC.Controllers
     [Route("[controller]")]
     public class UsuariosController : ControllerBase
     {
-        //nao subiu no azure
         private readonly DataContext _context;
         public readonly IConfiguration _configuration;
 
