@@ -62,8 +62,8 @@ namespace ApiTCC.Controllers
         {
             try
             {
-                if (await UsuarioExistente(user.Nome))
-                    throw new System.Exception("Nome de usuario ja existente");
+                if (await UsuarioExistente(user.Cpf))
+                    throw new System.Exception("CPF ja existente");
 
                 Criptografia.CriarPasswordHash(user.PasswordString, out byte[] hash, out byte[] salt);
                 user.PasswordString = string.Empty;
@@ -111,6 +111,7 @@ namespace ApiTCC.Controllers
 
         }
 
+        [AllowAnonymous]//testando
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetUsuarios()
         {
