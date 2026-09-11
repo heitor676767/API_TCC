@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "J7GScxz2ks8=",
+  "dgSpecHash": "BxVSaTfb/kU=",
   "success": true,
-  "projectFilePath": "D:\\TCC\\API_TCC\\ApiTCC.csproj",
+  "projectFilePath": "D:\\tcc\\API_TCC\\ApiTCC.csproj",
   "expectedPackageFiles": [
     "D:\\NUGET_PACKAGES\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "D:\\NUGET_PACKAGES\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",
@@ -58,10 +58,10 @@
     {
       "code": "NU1903",
       "level": "Warning",
-      "message": "Package 'Microsoft.OpenApi' 2.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-v5pm-xwqc-g5wc",
-      "projectPath": "D:\\TCC\\API_TCC\\ApiTCC.csproj",
+      "message": "O pacote 'Microsoft.OpenApi' 2.0.0 tem uma alta vulnerabilidade de gravidade conhecida, https://github.com/advisories/GHSA-v5pm-xwqc-g5wc",
+      "projectPath": "D:\\tcc\\API_TCC\\ApiTCC.csproj",
       "warningLevel": 1,
-      "filePath": "D:\\TCC\\API_TCC\\ApiTCC.csproj",
+      "filePath": "D:\\tcc\\API_TCC\\ApiTCC.csproj",
       "libraryId": "Microsoft.OpenApi",
       "targetGraphs": [
         "net10.0"

@@ -36,6 +36,9 @@ namespace ApiTCC.Data
 
                 entity.HasKey(e => e.Cpf);
 
+                entity.Property(e => e.Id)
+                    .UseIdentityColumn();
+
                 entity.Property(e => e.Cpf)
                     .HasMaxLength(11)
                     .IsFixedLength()
@@ -140,6 +143,9 @@ namespace ApiTCC.Data
                 entity.ToTable("TB_PETS");
 
                 entity.HasKey(e => e.Rga);
+
+                entity.Property(e => e.Id)
+                    .UseIdentityColumn();
 
                 entity.Property(e => e.Rga)
                     .HasMaxLength(7)

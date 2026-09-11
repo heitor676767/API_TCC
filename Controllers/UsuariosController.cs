@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
+using API_TCC.DTOs;
 
 namespace ApiTCC.Controllers
 {
@@ -57,6 +58,7 @@ namespace ApiTCC.Controllers
             return tokenHandler.WriteToken(token);
         }
 
+        [AllowAnonymous]
         [HttpPost("Registrar")]
         public async Task<IActionResult> RegistrarUsuario(Usuario user)
         {
@@ -112,12 +114,40 @@ namespace ApiTCC.Controllers
         }
 
         [AllowAnonymous]//testando
-        [HttpGet("GetAll")]
         public async Task<IActionResult> GetUsuarios()
         {
             try
             {
-                List<Usuario> usuarios = await _context.TB_USUARIOS.ToListAsync();
+                List<UsuarioDto> usuarios = await _context.TB_USUARIOS
+                    .Select(u => new UsuarioDto
+                    {
+                        Id = u.Id,
+                        Cpf = u.Cpf,
+                        Nome = u.Nome,
+                        Cep = u.Cep,
+                        Email = u.Email,
+                        TipoUsuario = u.TipoUsuario,
+                        StatusUser = u.StatusUser,
+                        Telefone = u.Telefone,
+                        Genero = u.Genero,
+                        Foto = u.Foto,
+                        UltimoLogin = u.UltimoLogin,
+                        DataCadastro = u.DataCadastro,
+                        Pets = u.Pets.Select(p => new PetDto
+                        {
+                            Rga = p.Rga,
+                            Nome = p.Nome,
+                            Especie = p.Especie,
+                            Raca = p.Raca,
+                            Descricao = p.Descricao,
+                            Peso = p.Peso,
+                            Porte = p.Porte,
+                            Sexo = p.Sexo,
+                            CpfDono = p.CpfDono
+                        }).ToList()
+                    })
+                    .ToListAsync();
+
                 return Ok(usuarios);
             }
             catch (System.Exception ex)

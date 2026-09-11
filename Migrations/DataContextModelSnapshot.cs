@@ -158,7 +158,10 @@ namespace ApiTCC.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -288,7 +291,10 @@ namespace ApiTCC.Migrations
                         .HasDefaultValue("Nao informado");
 
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nome")
                         .IsRequired()

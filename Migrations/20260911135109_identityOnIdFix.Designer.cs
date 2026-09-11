@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiTCC.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20260904143651_IdentityOnId")]
-    partial class IdentityOnId
+    [Migration("20260911135109_identityOnIdFix")]
+    partial class identityOnIdFix
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -161,7 +161,10 @@ namespace ApiTCC.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -291,7 +294,10 @@ namespace ApiTCC.Migrations
                         .HasDefaultValue("Nao informado");
 
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nome")
                         .IsRequired()
