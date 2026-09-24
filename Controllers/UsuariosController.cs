@@ -153,6 +153,7 @@ namespace ApiTCC.Controllers
         }
 
         [AllowAnonymous]//testando
+        [HttpGet("GetAll")]
         public async Task<IActionResult> GetUsuarios()
         {
             try
