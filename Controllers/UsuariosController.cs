@@ -37,13 +37,31 @@ namespace ApiTCC.Controllers
             return false;
         }
 
+        // Traduz o campo TipoUsuario ('Dono','Petwalker','Ambos') em uma ou mais roles do JWT.
+        // É essa lista de roles que permite usar [Authorize(Roles = "Petwalker")] nos endpoints
+        // e garantir a diferenciação de papéis na API, não só na interface do app.
+        private static List<Claim> ObterRoleClaims(Usuario usuario)
+        {
+            var roles = new List<Claim>();
+
+            if (usuario.TipoUsuario == "Dono" || usuario.TipoUsuario == "Ambos")
+                roles.Add(new Claim(ClaimTypes.Role, "Dono"));
+
+            if (usuario.TipoUsuario == "Petwalker" || usuario.TipoUsuario == "Ambos")
+                roles.Add(new Claim(ClaimTypes.Role, "Petwalker"));
+
+            return roles;
+        }
+
         private string CriarToken(Usuario usuario)
 {
         List<Claim> claims = new List<Claim>
         {
                 new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
-                new Claim(ClaimTypes.Name, usuario.Nome)
+                new Claim(ClaimTypes.Name, usuario.Nome),
+                new Claim("Cpf", usuario.Cpf)
             };
+            claims.AddRange(ObterRoleClaims(usuario));
             SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8
             .GetBytes(_configuration.GetSection("ConfiguracaoToken:Chave").Value));
             SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
@@ -71,6 +89,26 @@ namespace ApiTCC.Controllers
                 user.PasswordString = string.Empty;
                 user.PasswordHash = hash;
                 user.PasswordSalt = salt;
+
+                // Diferenciação Dono x Petwalker acontece AQUI, na API: se o TipoUsuario
+                // indicar que ele também é petwalker, garantimos a criação do perfil
+                // correspondente (TB_PETWALKER_PERFIL) já no cadastro.
+                if (user.TipoUsuario == "Petwalker" || user.TipoUsuario == "Ambos")
+                {
+                    user.PetwalkerPerfil ??= new PetwalkerPerfil();
+                    user.PetwalkerPerfil.Cpf = user.Cpf;
+
+                    // Se o app ainda não envia AreaAtendimento num campo próprio,
+                    // usamos o CEP como valor provisório para não violar o NOT NULL.
+                    if (string.IsNullOrWhiteSpace(user.PetwalkerPerfil.AreaAtendimento))
+                        user.PetwalkerPerfil.AreaAtendimento = user.Cep;
+                }
+                else
+                {
+                    // Se for só Dono, garante que nenhum perfil de petwalker seja criado por engano.
+                    user.PetwalkerPerfil = null;
+                }
+
                 await _context.TB_USUARIOS.AddAsync(user);
                 await _context.SaveChangesAsync();
 
@@ -89,6 +127,7 @@ namespace ApiTCC.Controllers
             try
             {
                 Usuario? usuario = await _context.TB_USUARIOS
+                    .Include(x => x.PetwalkerPerfil) // inclui o perfil pra o app já saber, no login, se esse usuário é petwalker
                     .FirstOrDefaultAsync(x => x.Nome.ToLower().Equals(credenciais.Nome.ToLower()));
 
                 if (usuario == null)
