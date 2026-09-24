@@ -131,9 +131,9 @@ namespace ApiTCC.Controllers
                     .FirstOrDefaultAsync(x => x.Nome.ToLower().Equals(credenciais.Nome.ToLower()));
 
                 if (usuario == null)
-                    throw new System.Exception("Usuário não encontrado");
+                    throw new System.Exception("Usuário ou senha incorretos");
                 else if (!Criptografia.VerificarPasswordHash(credenciais.PasswordString, usuario.PasswordHash, usuario.PasswordSalt))
-                    throw new System.Exception("Senha incorreta.");
+                    throw new System.Exception("Usuário ou senha incorretos");
                 else
                 {
                     usuario.PasswordString = string.Empty;
