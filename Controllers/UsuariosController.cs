@@ -28,18 +28,19 @@ namespace ApiTCC.Controllers
             _configuration = configuration;
         }
 
-        private async Task<bool> UsuarioExistente(string username)
+        private async Task<bool> EmailExistente(string email)
         {
-            if (await _context.TB_USUARIOS.AnyAsync(x => x.Nome.ToLower() == username.ToLower()))
-            {
-                return true;
-            }
-            return false;
+            return await _context.TB_USUARIOS.AnyAsync(x => x.Email.ToLower() == email.ToLower());
+        }
+        private async Task<bool> CpfExistente(string cpf)
+        {
+            return await _context.TB_USUARIOS.AnyAsync(x => x.Cpf == cpf);
+        }
+        private async Task<bool> TelefoneExistente(string telefone)
+        {
+            return await _context.TB_USUARIOS.AnyAsync(x => x.Telefone == telefone);
         }
 
-        // Traduz o campo TipoUsuario ('Dono','Petwalker','Ambos') em uma ou mais roles do JWT.
-        // É essa lista de roles que permite usar [Authorize(Roles = "Petwalker")] nos endpoints
-        // e garantir a diferenciação de papéis na API, não só na interface do app.
         private static List<Claim> ObterRoleClaims(Usuario usuario)
         {
             var roles = new List<Claim>();
@@ -77,13 +78,42 @@ namespace ApiTCC.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet("VerificarEmail")]
+        public async Task<IActionResult> VerificarEmail(string email)
+        {
+            bool existe = await EmailExistente(email);
+            return Ok(existe);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("VerificarCpf")]
+        public async Task<IActionResult> VerificarCpf(string cpf)
+        {
+            bool existe = await CpfExistente(cpf);
+            return Ok(existe);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("VerificarTelefone")]
+        public async Task<IActionResult> VerificarTelefone(string telefone)
+        {
+            return Ok(await TelefoneExistente(telefone));
+        }
+
+        [AllowAnonymous]
         [HttpPost("Registrar")]
         public async Task<IActionResult> RegistrarUsuario(Usuario user)
         {
             try
             {
-                if (await UsuarioExistente(user.Cpf))
-                    throw new System.Exception("CPF ja existente");
+                if (await CpfExistente(user.Cpf))
+                    throw new System.Exception("CPF já cadastrado");
+
+                if (await EmailExistente(user.Email))
+                    throw new System.Exception("E-mail já cadastrado");
+
+                if (await TelefoneExistente(user.Telefone))
+                    throw new System.Exception("Telefone já cadastrado");
 
                 Criptografia.CriarPasswordHash(user.PasswordString, out byte[] hash, out byte[] salt);
                 user.PasswordString = string.Empty;
@@ -128,7 +158,7 @@ namespace ApiTCC.Controllers
             {
                 Usuario? usuario = await _context.TB_USUARIOS
                     .Include(x => x.PetwalkerPerfil) // inclui o perfil pra o app já saber, no login, se esse usuário é petwalker
-                    .FirstOrDefaultAsync(x => x.Nome.ToLower().Equals(credenciais.Nome.ToLower()));
+                    .FirstOrDefaultAsync(x => x.Cpf == credenciais.Cpf);
 
                 if (usuario == null)
                     throw new System.Exception("Usuário ou senha incorretos");
