@@ -106,6 +106,9 @@ namespace ApiTCC.Controllers
         {
             try
             {
+                if (!ValidadorCpf.EhValido(user.Cpf))
+                    throw new System.Exception("CPF inválido");
+
                 if (await CpfExistente(user.Cpf))
                     throw new System.Exception("CPF já cadastrado");
 
