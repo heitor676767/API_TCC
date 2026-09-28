@@ -127,6 +127,12 @@ namespace ApiTCC.Data
                     .HasMaxLength(100)
                     .IsRequired();
 
+                entity.Property(e => e.Latitude)
+                    .HasColumnType("decimal(9,6)");
+
+                entity.Property(e => e.Longitude)
+                    .HasColumnType("decimal(9,6)");
+
                 // Relacionamento 1:1 com Usuario (chave compartilhada)
                 entity.HasOne(e => e.Usuario)
                     .WithOne(e => e.PetwalkerPerfil)

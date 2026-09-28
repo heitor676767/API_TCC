@@ -69,12 +69,12 @@ namespace API_TCC.Controllers
         }
         
         [AllowAnonymous]
-        [HttpGet("GetAll")]
-        public async Task<IActionResult> GetPets()
+        [HttpGet("GetMeusPets")]
+        public async Task<IActionResult> GetPets(string cpfDono)
         {
             try
             {
-                List<Pet> pets = await _context.TB_PETS.ToListAsync();
+                List<Pet> pets = await _context.TB_PETS.Where(p => p.CpfDono == cpfDono).ToListAsync();
                 return Ok(pets);
             }
             catch (System.Exception ex)

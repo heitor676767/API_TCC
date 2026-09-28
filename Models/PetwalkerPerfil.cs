@@ -13,6 +13,10 @@ namespace ApiTCC.Models
 
             public string AreaAtendimento { get; set; }
 
+            public decimal? Latitude { get; set; }
+
+            public decimal? Longitude { get; set; }
+            
             // Navegação 1:1 com Usuario
             public Usuario Usuario { get; set; }
 

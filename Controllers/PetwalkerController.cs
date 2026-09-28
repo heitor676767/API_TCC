@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using ApiTCC.DTOs;
 
 namespace API_TCC.Controllers
 {
@@ -31,10 +32,19 @@ namespace API_TCC.Controllers
         // PetwalkerPerfil — ver observação abaixo sobre isso.
         [AllowAnonymous]
         [HttpGet("Disponiveis")]
-        public async Task<IActionResult> GetDisponiveis([FromQuery] string? area = null)
+        public async Task<IActionResult> GetDisponiveis(
+            [FromQuery] string? area = null,
+            [FromQuery] double? lat = null,
+            [FromQuery] double? lng = null,
+            [FromQuery] double raioKm = 2
+
+            )
         {
             try
             {
+                if (lat.HasValue != lng.HasValue)
+                    return BadRequest("Informe lat e lng juntos");
+
                 var query = _context.TB_PETWALKER_PERFIL
                     .Include(p => p.Usuario)
                     .Include(p => p.Avaliacoes)
@@ -56,12 +66,44 @@ namespace API_TCC.Controllers
                     })
                     .ToListAsync();
 
+                if (lat.HasValue && lng.HasValue)
+                {
+                    // Haversine calculado em memória: pro volume de um TCC é simples e evita
+                    // depender de como o EF traduz funções trigonométricas pro SQL Server.
+                    petwalkers = petwalkers
+                        .Where(p => p.Latitude.HasValue && p.Longitude.HasValue)
+                        .Select(p =>
+                        {
+                            p.DistanciaKm = Math.Round(
+                                DistanciaEmKm(lat.Value, lng.Value, (double)p.Latitude!.Value, (double)p.Longitude!.Value), 2);
+                            return p;
+                        })
+                        .Where(p => p.DistanciaKm <= raioKm)
+                        .OrderBy(p => p.DistanciaKm)
+                        .ToList();
+                }
+
                 return Ok(petwalkers);
             }
             catch (System.Exception ex)
             {
                 return BadRequest(ex.Message + " _ " + ex.InnerException);
             }
+        }
+
+        private static double GrausParaRadianos(double graus) => graus * Math.PI / 180.0;
+
+        // Formula de Haversine: nao sei explicar ainda mas calcula distancia em km entre dois pontos (lat/lng em graus)
+        private static double DistanciaEmKm(double lat1, double lng1, double lat2, double lng2)
+        {
+            const double raioTerraKm = 6371.0;
+            double dLat = GrausParaRadianos(lat2 - lat1);
+            double dLng = GrausParaRadianos(lng2 - lng1);
+
+            double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                       Math.Cos(GrausParaRadianos(lat1)) * Math.Cos(GrausParaRadianos(lat2)) *
+                       Math.Sin(dLng / 2) * Math.Sin(dLng/2) ;
+            return raioTerraKm * 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
         }
 
         // GET /Petwalker/{cpf}
@@ -83,6 +125,8 @@ namespace API_TCC.Controllers
                         Foto = p.Usuario.Foto,
                         Disponibilidade = p.Disponibilidade,
                         AreaAtendimento = p.AreaAtendimento,
+                        Latitude = p.Latitude,        
+                        Longitude = p.Longitude,        
                         QuantidadeAvaliacoes = p.Avaliacoes.Count,
                         NotaMedia = p.Avaliacoes.Any() ? p.Avaliacoes.Average(a => a.Nota) : 0,
                         Avaliacoes = p.Avaliacoes.Select(a => new AvaliacaoDto
@@ -175,6 +219,34 @@ namespace API_TCC.Controllers
             catch (System.Exception ex)
             {
                 return BadRequest(ex.Message + " _ " + ex.InnerException);
+            }
+        }
+
+        // PUT/Petwalker/Localizacao
+        // O petwalker logado define onde ele atende (ponto base que aparece no mapa)
+        [Authorize(Roles = "Petwalker")]
+        [HttpPut("Localizacao")]
+        public async Task<IActionResult> AtualizarLocalizacao(AtualizarLocalizacaoDto dto)
+        {
+            try
+            {
+                if (CpfLogado == null)
+                    return Unauthorized();
+
+                PetwalkerPerfil? perfil = await _context.TB_PETWALKER_PERFIL.FirstOrDefaultAsync(p => p.Cpf == CpfLogado);
+
+                if (perfil == null)
+                    return NotFound("Perfil de petwalker nao encontrado para este usuario!");
+
+                perfil.Latitude = dto.Latitude;
+                perfil.Longitude = dto.Longitude;
+                await _context.SaveChangesAsync();
+
+                return Ok(new { perfil.Latitude, perfil.Longitude });
+            }
+            catch(System.Exception ex)
+            {
+                return BadRequest(ex.Message + " - " + ex.InnerException);
             }
         }
     }
