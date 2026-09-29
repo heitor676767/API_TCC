@@ -1,6 +1,5 @@
 using ApiTCC.Models;
 using Microsoft.EntityFrameworkCore;
-using ApiTCC.Models.Enums;  
 
 namespace ApiTCC.Data
 {
@@ -19,6 +18,7 @@ namespace ApiTCC.Data
         public DbSet<Transacao> TB_TRANSACOES { get; set; }
 
         public DbSet<LocalizacaoPasseio> TB_LOCALIZACAO_PASSEIO { get; set; }
+        public DbSet<CodigoRecuperacao> TB_CODIGOS_RECUPERACAO { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -362,6 +362,31 @@ namespace ApiTCC.Data
             });
 
             #endregion
+
+            #region TB_CODIGOS_RECUPERACAO
+            modelBuilder.Entity<CodigoRecuperacao>(entity =>
+            {
+                entity.ToTable("TB_CODIGOS_RECUPERACAO");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(100)
+                    .IsRequired();
+
+                entity.Property(e => e.Codigo)
+                    .HasMaxLength(6)
+                    .IsFixedLength()
+                    .IsRequired();
+
+                entity.Property(e => e.DataExpiracao)
+                    .IsRequired();
+
+                entity.Property(e => e.Usado)
+                    .HasDefaultValue(false)
+                    .IsRequired();
+            });
+            #endregion
+
         }
     }
 }

@@ -1,16 +1,17 @@
-﻿using ApiTCC.Data;
+﻿using API_TCC.DTOs;
+using ApiTCC.Data;
+using ApiTCC.DTOs;
 using ApiTCC.Models;
 using ApiTCC.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authorization;
-using API_TCC.DTOs;
+using System.Security.Claims;
+using System.Text;
 
 namespace ApiTCC.Controllers
 {
@@ -21,11 +22,13 @@ namespace ApiTCC.Controllers
     {
         private readonly DataContext _context;
         public readonly IConfiguration _configuration;
+        private readonly EmailService _emailService;
 
-        public UsuariosController(DataContext context, IConfiguration configuration) 
+        public UsuariosController(DataContext context, IConfiguration configuration, EmailService emailService) 
         { 
             _context = context; 
             _configuration = configuration;
+            _emailService = emailService;
         }
 
         private async Task<bool> EmailExistente(string email)
@@ -230,5 +233,80 @@ namespace ApiTCC.Controllers
 
         }
 
+        [AllowAnonymous]
+        [HttpPost("EsqueciSenha")]
+        public async Task<IActionResult> EsqueciSenha(EsqueciSenhaDto dto)
+        {
+            try
+            {
+                Usuario? usuario = await _context.TB_USUARIOS
+                    .FirstOrDefaultAsync(x => x.Email.ToLower() == dto.Email.ToLower());
+
+                if (usuario == null)
+                    return Ok(); // não revela se o e-mail existe ou não, por segurança
+
+                string codigo = new Random().Next(100000, 999999).ToString();
+
+                var recuperacao = new CodigoRecuperacao
+                {
+                    Email = dto.Email,
+                    Codigo = codigo,
+                    DataExpiracao = DateTime.Now.AddMinutes(15),
+                    Usado = false
+                };
+
+                await _context.TB_CODIGOS_RECUPERACAO.AddAsync(recuperacao);
+                await _context.SaveChangesAsync();
+
+                await _emailService.EnviarCodigoAsync(dto.Email, codigo);
+
+                return Ok();
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("RedefinirSenha")]
+        public async Task<IActionResult> RedefinirSenha(RedefinirSenhaDto dto)
+        {
+            try
+            {
+                var recuperacao = await _context.TB_CODIGOS_RECUPERACAO
+                    .Where(c => c.Email.ToLower() == dto.Email.ToLower()
+                             && c.Codigo == dto.Codigo
+                             && !c.Usado
+                             && c.DataExpiracao > DateTime.Now)
+                    .OrderByDescending(c => c.Id)
+                    .FirstOrDefaultAsync();
+
+                if (recuperacao == null)
+                    throw new System.Exception("Código inválido ou expirado");
+
+                Usuario? usuario = await _context.TB_USUARIOS
+                    .FirstOrDefaultAsync(x => x.Email.ToLower() == dto.Email.ToLower());
+
+                if (usuario == null)
+                    throw new System.Exception("Usuário não encontrado");
+
+                Criptografia.CriarPasswordHash(dto.NovaSenha, out byte[] hash, out byte[] salt);
+                usuario.PasswordHash = hash;
+                usuario.PasswordSalt = salt;
+
+                recuperacao.Usado = true;
+
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
+    
 }

@@ -1,7 +1,8 @@
 using ApiTCC.Data;
+using ApiTCC.Utils;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -19,6 +20,7 @@ builder.Services.AddDbContext<DataContext>
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
+builder.Services.AddScoped<EmailService>();
 
 builder.Services
     .AddControllers()
