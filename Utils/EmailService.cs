@@ -39,4 +39,5 @@
             await client.DisconnectAsync(true);
 
         }
+    }
 }
