@@ -63,6 +63,38 @@ namespace ApiTCC.Migrations
                     b.ToTable("TB_AVALIACOES", (string)null);
                 });
 
+            modelBuilder.Entity("ApiTCC.Models.CodigoRecuperacao", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Codigo")
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("nchar(6)")
+                        .IsFixedLength();
+
+                    b.Property<DateTime>("DataExpiracao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("Usado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TB_CODIGOS_RECUPERACAO", (string)null);
+                });
+
             modelBuilder.Entity("ApiTCC.Models.LocalizacaoPasseio", b =>
                 {
                     b.Property<int>("IdPasseio")
