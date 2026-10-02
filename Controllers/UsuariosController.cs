@@ -6,6 +6,7 @@ using ApiTCC.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -186,6 +187,54 @@ namespace ApiTCC.Controllers
                 return BadRequest(ex.Message + " _ " + ex.InnerException);
             }
 
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> AtualizarUsuario(AtualizarUsuarioDto dto)
+        {
+            try
+            {
+                string? cpfLogado = User.FindFirstValue("Cpf");
+                if (cpfLogado == null)
+                    return Unauthorized();
+
+                Usuario? usuario = await _context.TB_USUARIOS.FirstOrDefaultAsync(u => u.Cpf == cpfLogado);
+
+                if (usuario == null)
+                    return NotFound("Usuário não encontrado");
+
+                bool telefonedeOutroUsuario = await _context.TB_USUARIOS.AnyAsync(u => u.Telefone == dto.Telefone && u.Cpf != cpfLogado);
+                if (telefonedeOutroUsuario)
+                    return BadRequest("Esse telefone já está em uso por outro usuário.");
+
+                usuario.Nome = dto.Nome;
+                usuario.Telefone = dto.Telefone;
+                usuario.Cep = dto.Cep;
+                usuario.Genero = dto.Genero ?? usuario.Genero;
+                usuario.Foto = dto.Foto ?? usuario.Foto;
+
+                await _context.SaveChangesAsync();
+
+                return Ok(new UsuarioDto
+                {
+                    Id = usuario.Id,
+                    Nome = usuario.Nome,
+                    Cpf = usuario.Cpf,
+                    Email = usuario.Email,
+                    Telefone = usuario.Telefone,
+                    Cep = usuario.Cep
+                });
+            }
+            catch(DbUpdateException ex)
+            {
+                if (ex.InnerException is SqlException sqlEx && sqlEx.Message.Contains("would be truncated"))
+                    return BadRequest("Um dos campos enviaos excede o tamanho máximo permitido.");
+                return BadRequest("Não foi possível atualizar o usuário. Confira os dados enviados.");
+            }
+            catch(System.Exception ex)
+            {
+                return BadRequest(ex.Message + " - " + ex.InnerException);
+            }
         }
 
         [AllowAnonymous]//testando
