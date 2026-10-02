@@ -5,14 +5,12 @@ namespace ApiTCC.DTOs
     public class CriarAvaliacaoDto
     {
         [Required]
-        public string Rga { get; set; } = string.Empty;
-
-        [Required]
-        public string CpfPetwalker { get; set; } = string.Empty;
+        public int IdPasseio { get; set; }
 
         [Range(1, 5)]
         public int Nota { get; set; }
 
+        [StringLength(250)]
         public string? Comentario { get; set; }
     }
 }

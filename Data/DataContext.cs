@@ -244,6 +244,9 @@ namespace ApiTCC.Data
                     .HasForeignKey(e => e.Rga)
                     .OnDelete(DeleteBehavior.Restrict);
 
+                entity.HasIndex(e => e.IdPasseio)
+                    .IsUnique();
+
                 entity.HasOne(e => e.PetwalkerPerfil)
                     .WithMany(e => e.Avaliacoes)
                     .HasForeignKey(e => e.CpfPetwalker)

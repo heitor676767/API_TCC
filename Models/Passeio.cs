@@ -24,5 +24,6 @@ namespace ApiTCC.Models
         public PetwalkerPerfil PetwalkerPerfil { get; set; } = null!;
         public ICollection<Transacao> Transacoes { get; set; } = new List<Transacao>();
         public LocalizacaoPasseio LocalizacaoPasseio { get; set; } = null!;
+        public Avaliacao? Avaliacao { get; set; }
     }
 }

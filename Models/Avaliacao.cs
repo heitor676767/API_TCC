@@ -19,6 +19,9 @@ namespace ApiTCC.Models
         public string Rga { get; set; } = string.Empty; // char(7), FK -> Pet.Rga
 
         public string CpfPetwalker { get; set; } = string.Empty; // char(11), FK -> PetwalkerPerfil.Cpf
+
+        public int IdPasseio { get; set; }
+
         //Navegacao
         public Pet Pet { get; set; } = null!;
         public PetwalkerPerfil PetwalkerPerfil { get; set; } = null!;
