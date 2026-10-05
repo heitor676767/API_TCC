@@ -180,7 +180,9 @@ namespace API_TCC.Controllers
         }
 
         // POST /Petwalker/TornarPetwalker
-        // Caso de uso: um usuário cadastrado só como "Dono" decide virar petwalker depois.
+        // Caso de uso: um usuário cadastrado como "Dono" decide virar petwalker depois.
+        // IMPORTANTE: isso TROCA o tipo da conta (não existe mais "Ambos") — o usuário
+        // deixa de ter a role "Dono" e passa a ser só "Petwalker".
         // Atualiza TipoUsuario e cria o PetwalkerPerfil sem precisar recadastrar a conta.
         // Obs: como TipoUsuario muda, o app precisa pedir login de novo pra pegar um
         // token novo com a role "Petwalker" incluída.
@@ -204,7 +206,9 @@ namespace API_TCC.Controllers
                 if (usuario.PetwalkerPerfil != null)
                     return BadRequest("Usuário já possui perfil de petwalker.");
 
-                usuario.TipoUsuario = usuario.TipoUsuario == "Dono" ? "Ambos" : "Petwalker";
+                // Não existe mais "Ambos": virar petwalker agora troca o tipo por completo,
+                // o usuário deixa de ser Dono (perde a role Dono no próximo login).
+                usuario.TipoUsuario = "Petwalker";
                 usuario.PetwalkerPerfil = new PetwalkerPerfil
                 {
                     Cpf = usuario.Cpf,

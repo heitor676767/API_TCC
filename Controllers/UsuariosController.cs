@@ -6,7 +6,6 @@ using ApiTCC.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -49,10 +48,10 @@ namespace ApiTCC.Controllers
         {
             var roles = new List<Claim>();
 
-            if (usuario.TipoUsuario == "Dono" || usuario.TipoUsuario == "Ambos")
+            if (usuario.TipoUsuario == "Dono")
                 roles.Add(new Claim(ClaimTypes.Role, "Dono"));
 
-            if (usuario.TipoUsuario == "Petwalker" || usuario.TipoUsuario == "Ambos")
+            if (usuario.TipoUsuario == "Petwalker")
                 roles.Add(new Claim(ClaimTypes.Role, "Petwalker"));
 
             return roles;
@@ -113,6 +112,9 @@ namespace ApiTCC.Controllers
                 if (!ValidadorCpf.EhValido(user.Cpf))
                     throw new System.Exception("CPF inválido");
 
+                if (user.TipoUsuario != "Dono" && user.TipoUsuario != "Petwalker")
+                    throw new System.Exception("TipoUsuario deve ser 'Dono' ou 'Petwalker'.");
+
                 if (await CpfExistente(user.Cpf))
                     throw new System.Exception("CPF já cadastrado");
 
@@ -128,9 +130,9 @@ namespace ApiTCC.Controllers
                 user.PasswordSalt = salt;
 
                 // Diferenciação Dono x Petwalker acontece AQUI, na API: se o TipoUsuario
-                // indicar que ele também é petwalker, garantimos a criação do perfil
-                // correspondente (TB_PETWALKER_PERFIL) já no cadastro.
-                if (user.TipoUsuario == "Petwalker" || user.TipoUsuario == "Ambos")
+                // for Petwalker, garantimos a criação do perfil correspondente
+                // (TB_PETWALKER_PERFIL) já no cadastro.
+                if (user.TipoUsuario == "Petwalker")
                 {
                     user.PetwalkerPerfil ??= new PetwalkerPerfil();
                     user.PetwalkerPerfil.Cpf = user.Cpf;
@@ -189,6 +191,9 @@ namespace ApiTCC.Controllers
 
         }
 
+        // PUT /Usuarios   body: { nome, telefone, cep, genero?, foto? }
+        // Edita o perfil do próprio usuário logado (CPF vem do token, não de parâmetro).
+        // CPF, Email e TipoUsuario não são editáveis aqui de propósito.
         [HttpPut]
         public async Task<IActionResult> AtualizarUsuario(AtualizarUsuarioDto dto)
         {
@@ -198,13 +203,15 @@ namespace ApiTCC.Controllers
                 if (cpfLogado == null)
                     return Unauthorized();
 
-                Usuario? usuario = await _context.TB_USUARIOS.FirstOrDefaultAsync(u => u.Cpf == cpfLogado);
+                Usuario? usuario = await _context.TB_USUARIOS
+                    .FirstOrDefaultAsync(u => u.Cpf == cpfLogado);
 
                 if (usuario == null)
-                    return NotFound("Usuário não encontrado");
+                    return NotFound("Usuário não encontrado.");
 
-                bool telefonedeOutroUsuario = await _context.TB_USUARIOS.AnyAsync(u => u.Telefone == dto.Telefone && u.Cpf != cpfLogado);
-                if (telefonedeOutroUsuario)
+                bool telefoneDeOutroUsuario = await _context.TB_USUARIOS
+                    .AnyAsync(u => u.Telefone == dto.Telefone && u.Cpf != cpfLogado);
+                if (telefoneDeOutroUsuario)
                     return BadRequest("Esse telefone já está em uso por outro usuário.");
 
                 usuario.Nome = dto.Nome;
@@ -225,15 +232,9 @@ namespace ApiTCC.Controllers
                     Cep = usuario.Cep
                 });
             }
-            catch(DbUpdateException ex)
+            catch (System.Exception ex)
             {
-                if (ex.InnerException is SqlException sqlEx && sqlEx.Message.Contains("would be truncated"))
-                    return BadRequest("Um dos campos enviaos excede o tamanho máximo permitido.");
-                return BadRequest("Não foi possível atualizar o usuário. Confira os dados enviados.");
-            }
-            catch(System.Exception ex)
-            {
-                return BadRequest(ex.Message + " - " + ex.InnerException);
+                return BadRequest(ex.Message + " _ " + ex.InnerException);
             }
         }
 

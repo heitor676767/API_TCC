@@ -25,7 +25,7 @@ namespace ApiTCC.Models
         //Navegacao
         public Pet Pet { get; set; } = null!;
         public PetwalkerPerfil PetwalkerPerfil { get; set; } = null!;
-
+        public Passeio Passeio { get; set; } = null!;
 
     }
 }

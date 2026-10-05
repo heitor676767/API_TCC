@@ -110,7 +110,7 @@ namespace API_TCC.Controllers
         }
 
         // Retorna passeios diferentes dependendo do papel: Dono vê os que pediu,
-        // Petwalker vê os que aceitou/foi designado. Quem é "Ambos" vê os dois conjuntos.
+        // Petwalker vê os que aceitou/foi designado.
         [HttpGet("Meus")]
         public async Task<IActionResult> Meus()
         {

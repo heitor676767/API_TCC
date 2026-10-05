@@ -74,7 +74,7 @@ namespace ApiTCC.Data
 
                 entity.ToTable(t => t.HasCheckConstraint(
                     "CK_Usuario_TipoUsuario",
-                    "TipoUsuario IN ('Dono','Petwalker','Ambos')"));
+                    "TipoUsuario IN ('Dono','Petwalker')"));
 
                 entity.Property(e => e.StatusUser)
                     .HasMaxLength(25);
@@ -244,12 +244,21 @@ namespace ApiTCC.Data
                     .HasForeignKey(e => e.Rga)
                     .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasIndex(e => e.IdPasseio)
-                    .IsUnique();
-
                 entity.HasOne(e => e.PetwalkerPerfil)
                     .WithMany(e => e.Avaliacoes)
                     .HasForeignKey(e => e.CpfPetwalker)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(e => e.IdPasseio)
+                    .IsRequired();
+
+                // Um passeio só pode ter uma avaliação.
+                entity.HasIndex(e => e.IdPasseio)
+                    .IsUnique();
+
+                entity.HasOne(e => e.Passeio)
+                    .WithOne(e => e.Avaliacao)
+                    .HasForeignKey<Avaliacao>(e => e.IdPasseio)
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
