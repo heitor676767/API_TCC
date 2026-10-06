@@ -8,6 +8,7 @@ namespace API_TCC.DTOs
         public string StatusPass { get; set; } = string.Empty;
         public DateTime DataPass { get; set; }
         public int Duracao { get; set; }
+        public DateTime? DataInicio { get; set; }
 
         public string PetRga { get; set; } = string.Empty;
         public string PetNome { get; set; } = string.Empty;

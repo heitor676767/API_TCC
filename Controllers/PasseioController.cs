@@ -38,6 +38,7 @@ namespace API_TCC.Controllers
                 StatusPass = p.StatusPass,
                 DataPass = p.DataPass,
                 Duracao = p.Duracao,
+                DataInicio = p.DataInicio,
                 PetRga = p.Pet.Rga,
                 PetNome = p.Pet.Nome,
                 DonoCpf = p.Pet.CpfDono,
@@ -200,6 +201,7 @@ namespace API_TCC.Controllers
                 return BadRequest($"Não é possível iniciar um passeio no status '{passeio.StatusPass}'.");
 
             passeio.StatusPass = StatusPasseio.EmAndamento;
+            passeio.DataInicio = DateTime.Now;
             await _context.SaveChangesAsync();
             return Ok(passeio.StatusPass);
         }

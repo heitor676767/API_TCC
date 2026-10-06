@@ -16,6 +16,9 @@ namespace ApiTCC.Models
 
         public int Duracao { get; set; }
 
+
+        public DateTime? DataInicio { get; set; }
+
         public string Rga { get; set; } // char(7), FK -> Pet.Rga
 
         public string CpfPetwalker { get; set; } // char(11), FK -> PetwalkerPerfil.Cpf

@@ -283,6 +283,8 @@ namespace ApiTCC.Data
                 entity.Property(e => e.Duracao)
                     .IsRequired();
 
+                entity.Property(e => e.DataInicio);
+
                 entity.Property(e => e.Rga)
                     .HasMaxLength(7)
                     .IsFixedLength()
