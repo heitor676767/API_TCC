@@ -59,6 +59,8 @@ namespace API_TCC.Controllers
                         Cpf = p.Cpf,
                         Nome = p.Usuario.Nome,
                         Foto = p.Usuario.Foto,
+                        Latitude = p.Latitude,
+                        Longitude = p.Longitude,
                         Disponibilidade = p.Disponibilidade,
                         AreaAtendimento = p.AreaAtendimento,
                         QuantidadeAvaliacoes = p.Avaliacoes.Count,

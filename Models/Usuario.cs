@@ -20,6 +20,10 @@ namespace ApiTCC.Models
         public byte[]? PasswordHash { get; set; }
         public byte[]? PasswordSalt { get; set; }
 
+        public string Endereco { get; set; } = string.Empty;
+        public decimal? Latitude { get; set; }
+        public decimal? Longitude { get; set; }
+
         public string TipoUsuario { get; set; }
 
         public string? StatusUser { get; set; }

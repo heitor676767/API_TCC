@@ -102,6 +102,16 @@ namespace ApiTCC.Data
                 entity.Property(e => e.DataCadastro)
                     .HasColumnType("date")
                     .HasDefaultValueSql("GETDATE()");
+
+                entity.Property(e => e.Endereco)
+                    .HasMaxLength(150)
+                    .IsRequired();
+
+                entity.Property(e => e.Latitude)
+                    .HasColumnType("decimal(9,6)");
+
+                entity.Property(e => e.Longitude)
+                    .HasColumnType("decimal(9,6)");
             });
 
             #endregion

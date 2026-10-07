@@ -318,6 +318,8 @@ namespace ApiTCC.Controllers
             }
         }
 
+
+
         [AllowAnonymous]
         [HttpPost("RedefinirSenha")]
         public async Task<IActionResult> RedefinirSenha(RedefinirSenhaDto dto)
