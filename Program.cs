@@ -1,7 +1,7 @@
 using ApiTCC.Data;
 using ApiTCC.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -39,6 +39,29 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("ConfiguracaoToken:Chave").Value)),
             ValidateIssuer = false,
             ValidateAudience = false
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = async ctx =>
+            {
+                var sid = ctx.Principal?.FindFirstValue("sid");
+
+                if (!Guid.TryParse(sid, out var sessaoId))
+                {
+                    ctx.Fail("Sessão inválida");
+                    return;
+                }
+
+                var db = ctx.HttpContext.RequestServices.GetRequiredService<DataContext>();
+
+                var ativa = await db.TB_SESSOES_USUARIO.AnyAsync(s =>
+                    s.Id == sessaoId &&
+                    s.DataRevogacao == null &&
+                    s.DataExpiracao > DateTime.UtcNow);
+
+                if (!ativa) ctx.Fail("Sessão revogada");
+            }
         };
     }
     );
