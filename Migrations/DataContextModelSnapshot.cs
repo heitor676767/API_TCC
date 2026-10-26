@@ -267,6 +267,56 @@ namespace ApiTCC.Migrations
                     b.ToTable("TB_PETWALKER_PERFIL", (string)null);
                 });
 
+            modelBuilder.Entity("ApiTCC.Models.SessaoUsuario", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CpfUsuario")
+                        .IsRequired()
+                        .HasMaxLength(11)
+                        .HasColumnType("nchar(11)")
+                        .IsFixedLength();
+
+                    b.Property<DateTime>("DataCriacao")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<DateTime>("DataExpiracao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DataRevogacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EnderecoIp")
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)");
+
+                    b.Property<string>("NomeDispositivo")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("RefreshTokenHash")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("UltimoAcesso")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RefreshTokenHash")
+                        .IsUnique();
+
+                    b.HasIndex("CpfUsuario", "DataRevogacao");
+
+                    b.ToTable("TB_SESSOES_USUARIO", (string)null);
+                });
+
             modelBuilder.Entity("ApiTCC.Models.Transacao", b =>
                 {
                     b.Property<int>("IdTransacao")
@@ -470,6 +520,17 @@ namespace ApiTCC.Migrations
                     b.HasOne("ApiTCC.Models.Usuario", "Usuario")
                         .WithOne("PetwalkerPerfil")
                         .HasForeignKey("ApiTCC.Models.PetwalkerPerfil", "Cpf")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("ApiTCC.Models.SessaoUsuario", b =>
+                {
+                    b.HasOne("ApiTCC.Models.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("CpfUsuario")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

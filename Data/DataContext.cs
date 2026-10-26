@@ -19,6 +19,7 @@ namespace ApiTCC.Data
 
         public DbSet<LocalizacaoPasseio> TB_LOCALIZACAO_PASSEIO { get; set; }
         public DbSet<CodigoRecuperacao> TB_CODIGOS_RECUPERACAO { get; set; }
+        public DbSet<SessaoUsuario> TB_SESSOES_USUARIO { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -409,6 +410,53 @@ namespace ApiTCC.Data
                     .HasDefaultValue(false)
                     .IsRequired();
             });
+            #endregion
+
+            #region TB_SESSOES_USUARIO
+
+            modelBuilder.Entity<SessaoUsuario>(entity =>
+            {
+                entity.ToTable("TB_SESSOES_USUARIO");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.CpfUsuario)
+                    .HasMaxLength(11)
+                    .IsFixedLength()
+                    .IsRequired();
+
+                entity.Property(e => e.RefreshTokenHash)
+                    .HasMaxLength(100)
+                    .IsRequired();
+
+                entity.HasIndex(e => e.RefreshTokenHash)
+                    .IsUnique();
+
+                entity.Property(e => e.NomeDispositivo)
+                    .HasMaxLength(100)
+                    .IsRequired();
+
+                entity.Property(e => e.EnderecoIp)
+                    .HasMaxLength(45);
+
+                entity.Property(e => e.DataCriacao)
+                    .HasDefaultValueSql("GETDATE()")
+                    .IsRequired();
+
+                entity.Property(e => e.UltimoAcesso)
+                    .IsRequired();
+
+                entity.Property(e => e.DataExpiracao)
+                    .IsRequired();
+
+                entity.HasIndex(e => new { e.CpfUsuario, e.DataRevogacao });
+
+                entity.HasOne(e => e.Usuario)
+                    .WithMany()
+                    .HasForeignKey(e => e.CpfUsuario)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
             #endregion
 
         }

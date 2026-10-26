@@ -3331,23 +3331,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\DELL\\.nuget\\packages\\": {},
+    "D:\\NugetPackages": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\joao\\tcc\\API_TCC\\ApiTCC.csproj",
+      "projectUniqueName": "C:\\tcc\\api-tcc\\API_TCC\\ApiTCC.csproj",
       "projectName": "ApiTCC",
-      "projectPath": "C:\\joao\\tcc\\API_TCC\\ApiTCC.csproj",
-      "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-      "outputPath": "C:\\joao\\tcc\\API_TCC\\obj\\",
+      "projectPath": "C:\\tcc\\api-tcc\\API_TCC\\ApiTCC.csproj",
+      "packagesPath": "D:\\NugetPackages",
+      "outputPath": "C:\\tcc\\api-tcc\\API_TCC\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\etechas\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -3852,8 +3852,28 @@
       "code": "NU1903",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "O pacote 'Microsoft.OpenApi' 2.0.0 tem uma alta vulnerabilidade de gravidade conhecida, https://github.com/advisories/GHSA-v5pm-xwqc-g5wc",
+      "message": "Package 'Microsoft.OpenApi' 2.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-v5pm-xwqc-g5wc",
       "libraryId": "Microsoft.OpenApi",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'System.Security.Cryptography.Pkcs' 10.0.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-2fmv-rv2c-59x7",
+      "libraryId": "System.Security.Cryptography.Pkcs",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'System.Security.Cryptography.Pkcs' 10.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-846f-f764-76mx",
+      "libraryId": "System.Security.Cryptography.Pkcs",
       "targetGraphs": [
         "net10.0"
       ]

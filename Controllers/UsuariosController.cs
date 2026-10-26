@@ -57,13 +57,14 @@ namespace ApiTCC.Controllers
             return roles;
         }
 
-        private string CriarToken(Usuario usuario)
+        private string CriarToken(Usuario usuario, Guid sessaoId)
 {
         List<Claim> claims = new List<Claim>
         {
                 new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
                 new Claim(ClaimTypes.Name, usuario.Nome),
-                new Claim("Cpf", usuario.Cpf)
+                new Claim("Cpf", usuario.Cpf),
+                new Claim("sid", sessaoId.ToString())
             };
             claims.AddRange(ObterRoleClaims(usuario));
             SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8
@@ -175,10 +176,27 @@ namespace ApiTCC.Controllers
                     throw new System.Exception("Usuário ou senha incorretos");
                 else
                 {
+                    var sessao = new SessaoUsuario
+                    {
+                        Id = Guid.NewGuid(),
+                        CpfUsuario = usuario.Cpf,
+                        RefreshTokenHash = SessaoHelper.Hash(SessaoHelper.GerarRefreshToken()),
+                        NomeDispositivo = string.IsNullOrWhiteSpace(credenciais.NomeDispositivo)
+                            ? "Dispositivo desconhecido"
+                            : credenciais.NomeDispositivo,
+                        EnderecoIp = HttpContext.Connection.RemoteIpAddress?.ToString(),
+                        DataCriacao = DateTime.UtcNow,
+                        UltimoAcesso = DateTime.UtcNow,
+                        DataExpiracao = DateTime.UtcNow.AddDays(1) // igual à validade do seu JWT
+                    };
+
+                    _context.TB_SESSOES_USUARIO.Add(sessao);
+                    await _context.SaveChangesAsync();
+
                     usuario.PasswordString = string.Empty;
                     usuario.PasswordHash = null;
                     usuario.PasswordSalt = null;
-                    usuario.Token = CriarToken(usuario);
+                    usuario.Token = CriarToken(usuario, sessao.Id);
 
                     return Ok(usuario);
                 }

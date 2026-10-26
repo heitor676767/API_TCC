@@ -49,5 +49,8 @@ namespace ApiTCC.Models
 
         [NotMapped]
         public string PasswordString { get; set; } = string.Empty;
+
+        [NotMapped]
+        public string? NomeDispositivo { get; set; }
     }
 }
